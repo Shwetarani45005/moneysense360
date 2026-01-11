@@ -95,29 +95,52 @@ const [popUpProps, setPOpUpProps] = useState(null);
       const uploadRes = await axios.get("http://localhost:4500/api/v1/uploads")
       const formsRes = await axios.get("http://localhost:4500/api/v1/forms/")
 
-      for (let i=1; i<=3; i++){
-      const itemUploads = uploadRes.data.data[i]
-      const itemForms = formsRes.data.data[i]
+      console.log(" ======================= UPLOAD RES ======================\n\n", uploadRes.data.data[0])
+      console.log(" ======================= FORM RES ======================\n\n", formsRes.data.data)
 
-      setUploadHistory(uploadRes.data.data.map(item => (prev => ({
-        ...prev,
-        id: itemUploads.id,
-        filename: itemUploads.file_name || 'statement.csv',
-        date: new Date(itemUploads.updated_at).toLocaleDateString(),
-        status: itemUploads.status || 'Processed'
-      }))))
+      // for (let i=1; i<=3; i++){
+      // const itemUploads = uploadRes.data.data[i]
+      // const itemForms = formsRes.data.data[i]
+
+      // setUploadHistory(uploadRes.data.data.map(item => (prev => ({
+      //   ...prev,
+      //   id: itemUploads.id,
+      //   filename: itemUploads.file_name || 'statement.csv',
+      //   date: new Date(itemUploads.updated_at).toLocaleDateString(),
+      //   status: itemUploads.status || 'Processed'
+      // }))))
+
+      setUploadHistory(
+        uploadRes.data.data.slice(0, 3).map(item => ({
+          id: item.id,
+          filename: item.file_name || 'statement.csv',
+          date: new Date(item.updated_at).toLocaleDateString(),
+          status: item.status || 'Processed',
+        }))
+      );
 
       console.log("\n\n", uploadRes, "\n\n")
 
-      setFormHistory(formsRes.data.data.map(item => (prev => ({
-        ...prev,
-        id: itemForms.id,
-        date: new Date(itemForms.created_at).toLocaleDateString(),
-        age: itemForms.age,
-        jobType: itemForms.job_type,
-        createdAt: itemForms.created_at,
-      }))))
-    }}
+      // setFormHistory(formsRes.data.map(item => (prev => ({
+      //   ...prev,
+      //   id: itemForms.id,
+      //   date: new Date(itemForms.created_at).toLocaleDateString(),
+      //   age: itemForms.age,
+      //   jobType: itemForms.job_type,
+      //   createdAt: itemForms.created_at,
+      // }))))
+
+      setFormHistory(
+        formsRes.data.data.slice(0, 3).map(item => ({
+          id: item.id,
+          date: new Date(item.created_at).toLocaleDateString(),
+          age: item.age,
+          jobType: item.job_type,
+          createdAt: item.created_at,
+        }))
+      );
+    // }
+    }
     catch(err){
       console.log("ERROR FETCHING UPLOAD AND FORM HISTORIES...")
       console.error(err);
